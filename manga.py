@@ -13,10 +13,13 @@ class manga():
         return("Manga name: {0}; Current Chapter: {1}".format(self.name, self.chapter))
 
     def get_site(self):
-        print(self.website)
+        return self.website
 
     def update_chapter(self, new_chapter):
         """
         Updates the new chapter from a manga object
         """
         self.chapter = new_chapter
+
+    def update_site(self, new_site):
+        self.website = new_site
