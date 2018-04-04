@@ -6,6 +6,7 @@ from manga import manga
 
 
 """
+Weebo Management system(wms)
 Console based program designed to make managing manga a bit easier.
 It uses command line arguments to get information
 """
@@ -14,7 +15,19 @@ def get_parser():
     """
     Returns parser
     """
-    parser = argparse.ArgumentParser(description='Help keep mangas order organized')
+    parser = argparse.ArgumentParser(description='Help keep mangas order organized,' +
+                                     'some of these aruments might not be implemented')
+    parser.add_argument('-n', '--new',
+                        help='Goes through a prompt for new entry', action='store_true')
+    parser.add_argument('-u', '--update',
+                        help='Propts user to update a manga entry from a list', action='store_true')
+    parser.add_argument('-l', '--list',
+                        help='Lists all mangas that are stored', action='store_true')
+    parser.add_argument('-d', '--delete',
+                        help='Delete entries in using a prompt', action='store_true')
+    parser.add_argument('-f', '--finished',
+                        help='Set a manga to finished', action='store_true')
+    # Might not use these things anymore
     parser.add_argument('-nn', '--new_chapter_name', dest='new_chapter_name',
                         help='Given a name, selects a manga to update its chapter')
     parser.add_argument('-nc', '--new_chapter_number', dest='new_chapter_number',
@@ -28,17 +41,6 @@ def get_parser():
                         help='Given a name, udpates the current chapter of the manga')
     parser.add_argument('-uw', '--update_chapter_website', dest='update_chapter_website',
                         help='Given a name, udpates the current site the manga is getting read on')
-    # Optional stuff, used for prompting, goes through a menu
-    parser.add_argument('-n', '--new',
-                        help='Goes through a prompt for new entry', action='store_true')
-    parser.add_argument('-u', '--update',
-                        help='Propts user to update a manga entry from a list', action='store_true')
-    parser.add_argument('-l', '--list',
-                        help='Lists all mangas that are stored', action='store_true')
-    parser.add_argument('-d', '--delete',
-                        help='Lists all mangas that are stored', action='store_true')
-    parser.add_argument('-f', '--finished',
-                        help='Set a manga to finished', action='store_true')
     return parser.parse_args()
 
 def write_data(m_list):
@@ -66,8 +68,11 @@ def read_data(print_data=False):
 def list_file():
     """ Prints out the data file's data """
     m_list = read_data()
-    for counter, value in enumerate(m_list):
-        print('{0}: {1} {2}'.format(counter, value, value.website))
+    if m_list:
+        for counter, value in enumerate(m_list):
+            print('{0}: {1} {2}'.format(counter, value, value.website))
+    else:
+        print('There are no entries saved at the moment')
 
 def delete_entry():
     """
@@ -80,6 +85,7 @@ def delete_entry():
     delete_chapter_number = int(input(  # PEP8 bullshit
         'Enter the number of the chapter you want to delete from the data\n'))
     m_list.pop(delete_chapter_number)
+    write_data(m_list)
 
 
 def update_chapter(name, new_chapter):
@@ -139,8 +145,6 @@ def update_propmt():
 
 def main():
     """ Main Function
-    delete
-    set complete
     In the future, Put this on a databse, if local, then sqlite, otherwise, maybe some nosql thing
     Then on the web
     """
