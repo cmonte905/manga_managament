@@ -57,19 +57,11 @@ def read_data(print_data=False):
     if path.isfile('data.bin'):
         with open('data.bin', 'rb') as read_file:
             mangos = load(read_file)
-        if print_data:
+        if print_data:  # Wanted to avoid having another for loop here but not possible?
             for counter, value in enumerate(mangos):
                 print('{0}: {1} {2}'.format(counter, value, value.website))
         return mangos
     return mangos
-
-#def add_to_list(new_manga):
-#    """
-#    @TODO Figure out if this method should still exist
-#    Gets the list saved in the bin file, adds new entry, then saves it again
-#    """
-#    current_list = read_data()
-#    current_list.append(new_manga)
 
 def list_file():
     """ Prints out the data file's data """
