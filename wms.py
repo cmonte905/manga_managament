@@ -27,6 +27,8 @@ def get_parser():
                         help='Delete entries in using a prompt', action='store_true')
     parser.add_argument('-f', '--finished',
                         help='Set a manga to finished', action='store_true')
+    ''' These things might not get used anymore, the prompts seem to be good for now
+    later on though, these or a different version might be implemented
     # Might not use these things anymore
     parser.add_argument('-nn', '--new_chapter_name', dest='new_chapter_name',
                         help='Given a name, selects a manga to update its chapter')
@@ -41,6 +43,7 @@ def get_parser():
                         help='Given a name, udpates the current chapter of the manga')
     parser.add_argument('-uw', '--update_chapter_website', dest='update_chapter_website',
                         help='Given a name, udpates the current site the manga is getting read on')
+    '''
     return parser.parse_args()
 
 def write_data(m_list):
@@ -87,19 +90,19 @@ def delete_entry():
     m_list.pop(delete_chapter_number)
     write_data(m_list)
 
-
-def update_chapter(name, new_chapter):
-    """
-    @ TODO - Figure out if this function is still needed
-    Updates current chapter given a name
-    """
-    mangos = read_data()
-    for i in mangos:
-        print(i)
-
 def update_finish():
+    """
+    Given a list of manga, user chooses which one is now finished
+    """
     m_list = read_data(True)
+    if m_list:
+        update_chapter_number = int(input(
+            'Enter the number of the chapter you want to mark as finished\n'))
+        m_list[update_chapter_number].finished = True
+        write_data(m_list)
 
+    else:
+        print('Data file is empty')
 
 def new_prompt():
     """
@@ -108,6 +111,7 @@ def new_prompt():
     m_list = read_data()
     new_manga_name = input('Enter name name of the manga to add\n')
     in_list_check = False
+    # Making sure there are no duplicates in the list
     for i in m_list:
         if new_manga_name == i.name:
             in_list_check = True
