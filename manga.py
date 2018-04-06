@@ -11,7 +11,7 @@ class manga():
         self.finished = finished
 
     def __str__(self):
-        return("Manga name: {0}; Current Chapter: {1}; Finished?: {2}".format(self.name, self.chapter, self.finished))
+        return("Manga name: {0} | Current Chapter: {1} | Site: {2} | Finished?: {3}".format(self.name, self.chapter, self.website, self.finished))
 
     def get_site(self):
         return self.website

@@ -4,9 +4,8 @@ import argparse
 from manga import manga
 #import request  # Might make a client to manage these things on a server
 
-
 """
-Weebo Management system(wms)
+Weebo Management System(wms)
 Console based program designed to make managing manga a bit easier.
 It uses command line arguments to get information
 """
@@ -73,7 +72,7 @@ def list_file():
     m_list = read_data()
     if m_list:
         for counter, value in enumerate(m_list):
-            print('{0}: {1} {2}'.format(counter, value, value.website))
+            print('{0}: {1}'.format(counter, value))
     else:
         print('There are no entries saved at the moment')
 
@@ -118,7 +117,7 @@ def new_prompt():
             break
     if not in_list_check:
         new_manga_chapter = input('Enter the current chapter of said manga\n')
-        new_manga_site = input('enter the site that it is getting read on\n')
+        new_manga_site = input('Enter the site that it is getting read on\n')
         new_manga = manga(new_manga_name, new_manga_chapter, new_manga_site)
         print(new_manga)
         m_list.append(new_manga)
@@ -133,16 +132,20 @@ def update_propmt():
     m_list = read_data(True)
     update_chapter_number = int(input('Enter the number of the chapter you want to update\n'))
 
+    if m_list[update_chapter_number]:
+        print('The index is correct')
+    else:
+        print('The index is wrong')
     # Gives the option to update either the name and/or the website it gets read from
     chapter_update_flag = input('Would you like to update the current chapter? y/N?\n')
     if chapter_update_flag == 'y' or chapter_update_flag == 'Y':
-        new_chapter = int(input('Enter the new current chapter'))
+        new_chapter = int(input('Enter the new current chapter: '))
         m_list[update_chapter_number].chapter = new_chapter
 
     website_update_flag = input( # PEP8 on its bullshit
         'Would you like to update the website associated with that entry? y/N?\n')
     if website_update_flag == 'Y' or website_update_flag == 'y':
-        new_site = input('Please enter the new site\n')
+        new_site = input('Please enter the new site: ')
         m_list[update_chapter_number].website = new_site
 
     write_data(m_list)
