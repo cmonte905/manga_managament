@@ -13,17 +13,3 @@ class manga():
     def __str__(self):
         return("Manga name: {0} | Current Chapter: {1} | Site: {2} | Finished?: {3}".format(self.name, self.chapter, self.website, self.finished))
 
-    def get_site(self):
-        return self.website
-
-    def update_chapter(self, new_chapter):
-        """
-        Updates the new chapter from a manga object
-        """
-        self.chapter = new_chapter
-
-    def update_site(self, new_site):
-        self.website = new_site
-
-    def update_finished(self):
-        self.finished = True
