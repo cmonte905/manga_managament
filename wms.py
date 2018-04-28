@@ -2,13 +2,18 @@ from pickle import load, dump
 from os import path
 import argparse
 from manga import manga
-#import request  # Might make a client to manage these things on a server
+from colorama import Fore, Back, Style
+import sqlite3
 
 """
 Weebo Management System(wms)
 Console based program designed to make managing manga a bit easier.
 It uses command line arguments to get information
 """
+
+# Global variables for the colors to be displayed in the terminal
+COLOR = Fore.GREEN + Back.BLACK 
+ERROR = Fore.RED + Back.BLACK
 
 def get_parser():
     """
@@ -63,7 +68,7 @@ def read_data(print_data=False):
             mangos = load(read_file)
         if print_data:  # Wanted to avoid having another for loop here but not possible?
             for counter, value in enumerate(mangos):
-                print('{0}: {1} {2}'.format(counter, value, value.website))
+                print(COLOR + '{0}: {1} {2}'.format(counter, value, value.website))
         return mangos
     return mangos
 
@@ -72,7 +77,7 @@ def list_file():
     m_list = read_data()
     if m_list:
         for counter, value in enumerate(m_list):
-            print('{0}: {1}'.format(counter, value))
+            print(COLOR + '{0}: {1}'.format(counter, value))
     else:
         print('There are no entries saved at the moment')
 
@@ -85,7 +90,7 @@ def delete_entry():
     for counter, value in enumerate(m_list):
         print('{0}: {1}'.format(counter, value))
     delete_chapter_number = int(input(  # PEP8 bullshit
-        'Enter the number of the chapter you want to delete from the data\n'))
+        COLOR + 'Enter the number of the chapter you want to delete from the data\n'))
     m_list.pop(delete_chapter_number)
     write_data(m_list)
 
@@ -108,7 +113,7 @@ def new_prompt():
     Makes a new manga object then stores it into the list to be stored in a data file
     """
     m_list = read_data()
-    new_manga_name = input('Enter name name of the manga to add\n')
+    new_manga_name = input(COLOR + 'Enter name name of the manga to add\n')
     in_list_check = False
     # Making sure there are no duplicates in the list
     for i in m_list:
@@ -116,36 +121,36 @@ def new_prompt():
             in_list_check = True
             break
     if not in_list_check:
-        new_manga_chapter = input('Enter the current chapter of said manga\n')
-        new_manga_site = input('Enter the site that it is getting read on\n')
+        new_manga_chapter = input(COLOR + 'Enter the current chapter of said manga\n')
+        new_manga_site = input(COLOR + 'Enter the site that it is getting read on\n')
         new_manga = manga(new_manga_name, new_manga_chapter, new_manga_site)
         print(new_manga)
         m_list.append(new_manga)
         write_data(m_list)
     else:
-        print('That entry is already in the list, use update instead')
+        print(COLOR + 'That entry is already in the list, use update instead')
 
 def update_propmt():
     """
     Prompts user to update a manga given
     """
     m_list = read_data(True)
-    update_chapter_number = int(input('Enter the number of the chapter you want to update\n'))
+    update_chapter_number = int(input(COLOR + 'Enter the number of the chapter you want to update\n'))
 
     if m_list[update_chapter_number]:
-        print('The index is correct')
+        print(COLOR + 'The index is correct')
     else:
-        print('The index is wrong')
+        print(ERRROR + 'The index is wrong')
     # Gives the option to update either the name and/or the website it gets read from
-    chapter_update_flag = input('Would you like to update the current chapter? y/N?\n')
+    chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
     if chapter_update_flag == 'y' or chapter_update_flag == 'Y':
-        new_chapter = int(input('Enter the new current chapter: '))
+        new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
         m_list[update_chapter_number].chapter = new_chapter
 
     website_update_flag = input( # PEP8 on its bullshit
-        'Would you like to update the website associated with that entry? y/N?\n')
+        COLOR + 'Would you like to update the website associated with that entry? y/N?\n')
     if website_update_flag == 'Y' or website_update_flag == 'y':
-        new_site = input('Please enter the new site: ')
+        new_site = input(COLOR + 'Please enter the new site: ')
         m_list[update_chapter_number].website = new_site
 
     write_data(m_list)
