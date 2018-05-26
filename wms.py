@@ -12,7 +12,7 @@ It uses command line arguments to get information
 """
 
 # Global variables for the colors to be displayed in the terminal
-COLOR = Fore.GREEN + Back.BLACK 
+COLOR = Fore.GREEN + Back.BLACK
 ERROR = Fore.RED + Back.BLACK
 
 def get_parser():
@@ -140,7 +140,7 @@ def update_propmt():
     if m_list[update_chapter_number]:
         print(COLOR + 'The index is correct')
     else:
-        print(ERRROR + 'The index is wrong')
+        print(ERROR + 'The index is wrong')
     # Gives the option to update either the name and/or the website it gets read from
     chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
     if chapter_update_flag == 'y' or chapter_update_flag == 'Y':
