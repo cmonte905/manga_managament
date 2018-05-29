@@ -9,11 +9,15 @@ Mostly functions meant to be used when running on a flask backend
 All functions are used to communicate with a sqlite3 db and CRUD
 """
 
-def write_new_data(m_list):
+#conn = sqlite3.connect('manga.db')
+#c = conn.cursor()
+
+def write_new_data(m_list, name, chapter, site, finish_flag):
     """
     @TODO Make this function write to a database instead
     Writes to a database, only new entries will get written
     """
+
     with open('data.bin', 'wb') as data_file:
         dump(m_list, data_file)
 
