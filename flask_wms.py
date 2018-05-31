@@ -7,6 +7,7 @@ from db import DB
 Weebo Management System(wms) For Flask
 Mostly functions meant to be used when running on a flask backend
 All functions are used to communicate with a sqlite3 db and CRUD
+For the updates, only chapter, website and finish flag can be changed
 """
 
 database = DB()

@@ -16,7 +16,7 @@ class DB:
         self.m_db_connection = sqlite3.connect(db)
         self.m_db_cursor = self.m_db_connection.cursor()
 
-    def create_table(self):
+    def create_manga_table(self):
         """
         Creates table if there is none already created
         """
@@ -47,11 +47,8 @@ class DB:
         """
         Reads/returns all data from the database
         """
-        data = self.m_db_cursor.execute('Select * from mangas')
-        return_data = []
-        for i in data:
-            return_data.append(i)
-        return return_data
+        self.m_db_cursor.execute('Select * from mangas')
+        return self.m_db_cursor.fetchall()
 
     def close_connection(self):
         """
