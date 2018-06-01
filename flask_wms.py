@@ -27,16 +27,8 @@ def read_data():
     Reads in data from the data.bin file, it will return back empty list if file is empty
     """
     mangos = database.read_data()
-    print(mangos)
-    # Some logic for if the data file is empty
-    #if path.isfile('data.bin'):
-    #    with open('data.bin', 'rb') as read_file:
-    #        mangos = load(read_file)
-    #    if print_data:  # Wanted to avoid having another for loop here but not possible?
-    #        for counter, value in enumerate(mangos):
-    #            print('{0}: {1} {2}'.format(counter, value, value.website))
-    #    return mangos
-    #return mangos
+    #print(mangos)
+    return mangos
 
 
 def delete_entry():
