@@ -1,5 +1,5 @@
 # Weebo Management System
-### Less useful version of myanimelist
+### Less useful version of myanimelist, but for manga, and only for me
 
 
 #### TODO
