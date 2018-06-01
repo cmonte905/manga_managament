@@ -12,8 +12,8 @@ to a flask backend
 """
 
 # Global variables for the colors to be displayed in the terminal
-COLOR = Fore.GREEN + Back.BLACK
-ERROR = Fore.RED + Back.BLACK
+#COLOR = Fore.GREEN + Back.BLACK
+#ERROR = Fore.RED + Back.BLACK
 
 def get_parser():
     """
@@ -51,21 +51,19 @@ def get_parser():
     return parser.parse_args()
 
 
-def read_data(print_data=False):
+def read_data():
     """
-    Reads in data from the data.bin file, it will return back empty list if file is empty
+    Reads in data from the database at the server, @TODO print out
+    the data in a nice format
     """
-    req = requests.get('localhost:5000/manga/read')
+    req = requests.get('http://localhost:5000/manga/read')
+    #print(req.json())
     mangos = []
-    # Some logic for if the data file is empty
-    #if path.isfile('data.bin'):
-    #    with open('data.bin', 'rb') as read_file:
-    #        mangos = load(read_file)
-    #    if print_data:  # Wanted to avoid having another for loop here but not possible?
-    #        for counter, value in enumerate(mangos):
-    #            print(COLOR + '{0}: {1} {2}'.format(counter, value, value.website))
-    #    return mangos
-    #return mangos
+    for i in req.json():
+        mangos.append(manga(i[0],i[1],i[2],i[3]))
+
+    for i in mangos:
+        print(i)
 
 def list_file():
     """ Prints out the data file's data """
@@ -163,7 +161,7 @@ def main():
     elif args.update:
         update_propmt()
     elif args.list:
-        list_file()
+        read_data()
     elif args.delete:
         delete_entry()
     elif args.finished:
