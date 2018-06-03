@@ -1,7 +1,6 @@
 from os import path
 from db import DB
 #from manga import manga
-#import sqlite3
 
 """
 Weebo Management System(wms) For Flask
@@ -11,15 +10,13 @@ For the updates, only chapter, website and finish flag can be changed
 """
 
 database = DB()
-
-def write_new_data(m_list, name, chapter, site, finish_flag):
+def write_new_data(name, chapter, site, finish):
     """
     @TODO Make this function write to a database instead
     Writes to a database, only new entries will get written
     """
-    database.add_new_entry(name, chapter, site, finish_flag)
-    #with open('data.bin', 'wb') as data_file:
-    #   dump(m_list, data_file)
+    print('From wms:', name, chapter, site, finish)
+    database.add_new_entry(name, chapter, site, finish)
 
 def read_data():
     """
@@ -27,7 +24,6 @@ def read_data():
     Reads in data from the data.bin file, it will return back empty list if file is empty
     """
     mangos = database.read_data()
-    #print(mangos)
     return mangos
 
 
@@ -46,7 +42,6 @@ def delete_entry():
 
 def update_chapter_number(new_chapter):
     pass
-
 
 def update_finish():
     """

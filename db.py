@@ -31,9 +31,10 @@ class DB:
         :param site -> website it is getting read on
         :param finish -> finish flag
         """
-        self.m_db_cursor.execute('INSERT INTO mangas VALUES (?, ?, ?, ?)',
+        print('From API', name, chapter, site, finish)
+        self.m_db_cursor.execute('INSERT or IGNORE INTO mangas VALUES (?, ?, ?, ?)',
                                  (name, chapter, site, finish))
-        self.m_db_connection.commit()
+        #self.m_db_connection.commit()
 
     def delete_entry(self, name):
         """
@@ -49,6 +50,12 @@ class DB:
         """
         self.m_db_cursor.execute('Select * from mangas')
         return self.m_db_cursor.fetchall()
+
+    def commit_database(self):
+        """
+        Closes the connection to the database when done
+        """
+        self.m_db_connection.commit()
 
     def close_connection(self):
         """

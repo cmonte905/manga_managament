@@ -15,6 +15,7 @@ def post_create():
     chapter = req_data['chapter']
     site = req_data['site']
     print('\nThe function that is selected: {0} {1} {2}\n'.format(name, chapter, site))
+    flask_wms.write_new_data(name, chapter, site, "False")
     return 'Request recieved, create method'
 
 @app.route('/manga/delete', methods=['POST'])
