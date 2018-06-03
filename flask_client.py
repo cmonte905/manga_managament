@@ -1,6 +1,7 @@
 from os import path
 import argparse
 import requests
+import json
 from manga import manga
 from colorama import Fore, Back, Style
 
@@ -12,8 +13,8 @@ to a flask backend
 """
 
 # Global variables for the colors to be displayed in the terminal
-#COLOR = Fore.GREEN + Back.BLACK
-#ERROR = Fore.RED + Back.BLACK
+COLOR = Fore.GREEN #+ Back.BLACK
+ERROR = Fore.RED + Back.BLACK
 
 def get_parser():
     """
@@ -31,48 +32,21 @@ def get_parser():
                         help='Delete entries in using a prompt', action='store_true')
     parser.add_argument('-f', '--finished',
                         help='Set a manga to finished', action='store_true')
-    ''' These things might not get used anymore, the prompts seem to be good for now
-    later on though, these or a different version might be implemented
-    # Might not use these things anymore
-    parser.add_argument('-nn', '--new_chapter_name', dest='new_chapter_name',
-                        help='Given a name, selects a manga to update its chapter')
-    parser.add_argument('-nc', '--new_chapter_number', dest='new_chapter_number',
-                        help='Given a name, udpates the current chapter of the manga')
-    parser.add_argument('-nw', '--new_chapter_website', dest='new_chapter_website',
-                        help='Given a name, udpates the site the manga is getting read on')
-    # These args are to update stuff that is already in the list
-    parser.add_argument('-un', '--update_chapter_name', dest='update_chapter_name',
-                        help='Given a name, selects a manga to update its chapter')
-    parser.add_argument('-uc', '--update_chapter_number', dest='update_chapter_number',
-                        help='Given a name, udpates the current chapter of the manga')
-    parser.add_argument('-uw', '--update_chapter_website', dest='update_chapter_website',
-                        help='Given a name, udpates the current site the manga is getting read on')
-    '''
     return parser.parse_args()
 
-
-def read_data():
+def read_data(print_flag):
     """
-    Reads in data from the database at the server, @TODO print out
-    the data in a nice format
+    Reads in data from the database at the server,
     """
+    # TODO Change the server when this gets deployed to a server
     req = requests.get('http://localhost:5000/manga/read')
-    #print(req.json())
     mangos = []
     for i in req.json():
-        mangos.append(manga(i[0],i[1],i[2],i[3]))
-
-    for i in mangos:
-        print(i)
-
-def list_file():
-    """ Prints out the data file's data """
-    m_list = read_data()
-    if m_list:
-        for counter, value in enumerate(m_list):
-            print(COLOR + '{0}: {1}'.format(counter, value))
-    else:
-        print('There are no entries saved at the moment')
+        mangos.append(manga(i[0], i[1], i[2], i[3]))
+    if print_flag:
+        for i in mangos:
+            print(i)
+    return mangos
 
 def delete_entry():
     """
@@ -80,6 +54,9 @@ def delete_entry():
     is that i have read
     """
     m_list = read_data()
+    for i in req.json():
+        mangos.append(manga(i[0], i[1], i[2], i[3]))
+
     for counter, value in enumerate(m_list):
         print('{0}: {1}'.format(counter, value))
     delete_chapter_number = int(input(  # PEP8 bullshit
@@ -103,12 +80,13 @@ def update_finish():
 
 def new_prompt():
     """
-    Makes a new manga object then stores it into the list to be stored in a data file
+    Prompts user for information then saves sends it to be saved
+    New entries are to have a finish flag of false
     """
-    m_list = read_data()
+    m_list = read_data(False)
     new_manga_name = input(COLOR + 'Enter name name of the manga to add\n')
     in_list_check = False
-    # Making sure there are no duplicates in the list
+    # Making sure there are no duplicates in the database without getting an error
     for i in m_list:
         if new_manga_name == i.name:
             in_list_check = True
@@ -116,10 +94,13 @@ def new_prompt():
     if not in_list_check:
         new_manga_chapter = input(COLOR + 'Enter the current chapter of said manga\n')
         new_manga_site = input(COLOR + 'Enter the site that it is getting read on\n')
-        new_manga = manga(new_manga_name, new_manga_chapter, new_manga_site)
-        print(new_manga)
-        m_list.append(new_manga)
-        write_data(m_list)
+        manga_data = {
+            'name': new_manga_name,
+            'chapter': new_manga_chapter,
+            'site': new_manga_site
+        }
+        req = requests.post('http://localhost:5000/manga/create', json=manga_data)
+        print(req.text)
     else:
         print(COLOR + 'That entry is already in the list, use update instead')
 
@@ -154,16 +135,15 @@ def main():
     Then on the web
     """
     args = get_parser()
-    # Prefer it if these two things did not overlap
-    #print(args)
-    if args.new:
+    if args.new:  # Prompts user to create new entry to store
         new_prompt()
-    elif args.update:
+    elif args.update:  # Prompts the user to update either the chapter number or finish flag
         update_propmt()
-    elif args.list:
-        read_data()
-    elif args.delete:
+    elif args.list:  # Prints out data from database on the console
+        read_data(True)
+    elif args.delete:  # Prompts user to delete an entry from the database
         delete_entry()
+    # Probably not going to use this, just have the one function do it instead
     elif args.finished:
         update_finish()
 

@@ -9,7 +9,12 @@ def hello():
 @app.route('/manga/create', methods=['POST'])
 def post_create():
     req_data = request.get_json()
+
     print('This is the request itself \n', req_data)
+    name = req_data['name']
+    chapter = req_data['chapter']
+    site = req_data['site']
+    print('\nThe function that is selected: {0} {1} {2}\n'.format(name, chapter, site))
     return 'Request recieved, create method'
 
 @app.route('/manga/delete', methods=['POST'])
@@ -20,12 +25,8 @@ def post_delete():
 
 @app.route('/manga/read', methods=['GET'])
 def post_read():
-    #req_data = request.get_json()
-    #print('This is the request itself \n', req_data)
     mangos = flask_wms.read_data()  # from flask_wms
-    print(mangos)
     return jsonify(mangos)
-    #return 'Request recieved, read method'
 
 if __name__ == "__main__":
     app.run(debug=True)
