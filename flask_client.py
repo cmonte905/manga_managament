@@ -12,8 +12,8 @@ It uses command line arguments to get information that gets sent off
 to a flask backend
 """
 
-# Global variables for the colors to be displayed in the terminal
-COLOR = Fore.GREEN #+ Back.BLACK
+# Global variables for the colors to be displayed in the terminal because why not
+COLOR = Fore.YELLOW#+ Back.BLACK
 ERROR = Fore.RED + Back.BLACK
 
 def get_parser():
@@ -45,11 +45,12 @@ def read_data(print_flag):
         mangos.append(manga(i[0], i[1], i[2], i[3]))
     if print_flag:
         for i in mangos:
-            print(i)
+            print(COLOR, i)
     return mangos
 
 def delete_entry():
     """
+    #TODO Implement
     Deletes an entry from a list, might make a finish flag to remember what it
     is that i have read
     """
@@ -63,20 +64,6 @@ def delete_entry():
         COLOR + 'Enter the number of the chapter you want to delete from the data\n'))
     m_list.pop(delete_chapter_number)
     write_data(m_list)
-
-def update_finish():
-    """
-    Given a list of manga, user chooses which one is now finished
-    """
-    m_list = read_data(True)
-    if m_list:
-        update_chapter_number = int(input(
-            'Enter the number of the chapter you want to mark as finished\n'))
-        m_list[update_chapter_number].finished = True
-        write_data(m_list)
-
-    else:
-        print('Data file is empty')
 
 def new_prompt():
     """
@@ -108,26 +95,44 @@ def update_propmt():
     """
     Prompts user to update a manga given
     """
-    m_list = read_data(True)
+    m_list = read_data(False)
+    for counter, value in enumerate(m_list):
+        print(COLOR + '{0}: {1}'.format(counter, value))
     update_chapter_number = int(input(COLOR + 'Enter the number of the chapter you want to update\n'))
 
     if m_list[update_chapter_number]:
         print(COLOR + 'The index is correct')
     else:
         print(ERROR + 'The index is wrong')
+
     # Gives the option to update either the name and/or the website it gets read from
     chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
     if chapter_update_flag == 'y' or chapter_update_flag == 'Y':
         new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
-        m_list[update_chapter_number].chapter = new_chapter
+        #m_list[update_chapter_number].chapter = new_chapter
 
     website_update_flag = input( # PEP8 on its bullshit
         COLOR + 'Would you like to update the website associated with that entry? y/N?\n')
     if website_update_flag == 'Y' or website_update_flag == 'y':
         new_site = input(COLOR + 'Please enter the new site: ')
-        m_list[update_chapter_number].website = new_site
+        #m_list[update_chapter_number].website = new_site
 
-    write_data(m_list)
+def update_finish():
+    """
+    #TODO Decide if this should stay or have it be in the prompt
+    Given a list of manga, user chooses which one is now finished
+    """
+    m_list = read_data(True)
+    for counter, value in enumerate(mangos):
+        print(COLOR + '{0}: {1} {2}'.format(counter, value, value.website))
+    if m_list:
+        update_chapter_number = int(input(
+            'Enter the number of the chapter you want to mark as finished\n'))
+        m_list[update_chapter_number].finished = True
+        write_data(m_list)
+
+    else:
+        print('Data file is empty')
 
 def main():
     """ Main Function

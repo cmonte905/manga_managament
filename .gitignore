@@ -3,3 +3,4 @@ server
 *.pyc
 *.db
 *.bin
+set_env.sh

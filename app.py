@@ -4,10 +4,16 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
+    """
+    #TODO: Get rid of this endpoint soon, it is just a sanity check
+    """
     return 'Hello world, this should not be open to the internet'
 
 @app.route('/manga/create', methods=['POST'])
 def post_create():
+    """
+    Create endpoint, writes to the database user's new entry
+    """
     req_data = request.get_json()
 
     print('This is the request itself \n', req_data)
@@ -20,12 +26,27 @@ def post_create():
 
 @app.route('/manga/delete', methods=['POST'])
 def post_delete():
+    """
+    #TODO Implement, user should be able to delete entries based on manga names
+    """
     req_data = request.get_json()
     print('This is the request itself \n', req_data)
     return 'Request recieved, delete method'
 
+@app.route('/manga/update', methods=['POST'])
+def post_update():
+    """
+    #TODO IMPLEMENT -> Update endpoint, users can update either the chapter or if they finished reading something
+    """
+    req_data = request.get_json()
+    print('This is the request itself \n', req_data)
+    return 'Request recieved, update method'
+
 @app.route('/manga/read', methods=['GET'])
 def post_read():
+    """
+    Returns json of database content
+    """
     mangos = flask_wms.read_data()  # from flask_wms
     return jsonify(mangos)
 

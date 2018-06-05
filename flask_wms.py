@@ -1,6 +1,5 @@
 from os import path
 from db import DB
-#from manga import manga
 
 """
 Weebo Management System(wms) For Flask
@@ -51,10 +50,5 @@ def update_finish():
     if m_list:
         update_chapter_number = int(input(
             'Enter the number of the chapter you want to mark as finished\n'))
-        m_list[update_chapter_number].finished = True
-        write_data(m_list)
-
     else:
-        print('Data file is empty')
-
-
+        print('There are no entries in the database empty')
