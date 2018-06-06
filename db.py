@@ -34,14 +34,26 @@ class DB:
         print('From API', name, chapter, site, finish)
         self.m_db_cursor.execute('INSERT or IGNORE INTO mangas VALUES (?, ?, ?, ?)',
                                  (name, chapter, site, finish))
-        #self.m_db_connection.commit()
+
+    def update_chapter(self, name, new_chapter):
+        """
+        Updates a mangas current chapter
+        """
+        self.m_db_cursor.execute('UPDATE mangas SET chapter=? WHERE name=?', (new_chapter, name))
+
+    def update_finish(self, name):
+        """
+        Updates a manga entry to finish
+        """
+        self.m_db_cursor.execute('UPDATE mangas SET finished=? WHERE name=?', ('True', name))
 
     def delete_entry(self, name):
         """
         Deletes entries by name
         :param n -> name of manga to delete
         """
-        self.m_db_cursor.execute('DELETE FROM mangas WHERE name = (?)', (name))
+        print(name)
+        self.m_db_cursor.execute('DELETE FROM mangas WHERE name=?', (name,))
         self.m_db_connection.commit()
 
     def read_data(self):
@@ -51,7 +63,7 @@ class DB:
         self.m_db_cursor.execute('Select * from mangas')
         return self.m_db_cursor.fetchall()
 
-    def commit_database(self):
+    def commit_db(self):
         """
         Closes the connection to the database when done
         """

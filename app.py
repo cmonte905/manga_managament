@@ -31,6 +31,8 @@ def post_delete():
     """
     req_data = request.get_json()
     print('This is the request itself \n', req_data)
+    print(req_data['name'])
+    flask_wms.delete_entry(req_data['name'])
     return 'Request recieved, delete method'
 
 @app.route('/manga/update', methods=['POST'])
@@ -39,7 +41,13 @@ def post_update():
     #TODO IMPLEMENT -> Update endpoint, users can update either the chapter or if they finished reading something
     """
     req_data = request.get_json()
-    print('This is the request itself \n', req_data)
+    function = req_data['function']
+    if function == 'finish':
+        flask_wms.update_finish(req_data['name'])
+        print('App, finished request for manga {0}'.format(req_data['name']))
+    elif function == 'chapter':
+        flask_wms.update_chapter_number(req_data['name'], req_data['new_chapter'])
+        print("chapter method, changes stuff")
     return 'Request recieved, update method'
 
 @app.route('/manga/read', methods=['GET'])

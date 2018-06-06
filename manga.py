@@ -4,7 +4,7 @@ a data file.
 """
 class manga():
 
-    def __init__(self, m_name, current_chapter, website='', finished=False):
+    def __init__(self, m_name, current_chapter, website='', finished=''):
         self.name = m_name
         self.chapter = current_chapter
         self.website = website

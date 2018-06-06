@@ -43,10 +43,14 @@ def read_data(print_flag):
     mangos = []
     for i in req.json():
         mangos.append(manga(i[0], i[1], i[2], i[3]))
-    if print_flag:
-        for i in mangos:
-            print(COLOR, i)
-    return mangos
+    if mangos:
+        if print_flag:
+            for i in mangos:
+                print(COLOR, i)
+        return mangos
+    else:
+        print('list is empty')
+        return []
 
 def delete_entry():
     """
@@ -54,16 +58,18 @@ def delete_entry():
     Deletes an entry from a list, might make a finish flag to remember what it
     is that i have read
     """
-    m_list = read_data()
-    for i in req.json():
-        mangos.append(manga(i[0], i[1], i[2], i[3]))
-
+    m_list = read_data(False)
     for counter, value in enumerate(m_list):
-        print('{0}: {1}'.format(counter, value))
+        print(COLOR + '{0}: {1}'.format(counter, value))
     delete_chapter_number = int(input(  # PEP8 bullshit
         COLOR + 'Enter the number of the chapter you want to delete from the data\n'))
-    m_list.pop(delete_chapter_number)
-    write_data(m_list)
+    try:
+        print(m_list[delete_chapter_number])
+        data = {'name': m_list[delete_chapter_number].name}
+        req = requests.post('http://localhost:5000/manga/delete', json=data)
+        print(req.text)
+    except IndexError:
+        print('There is no entry for that number')
 
 def new_prompt():
     """
@@ -96,9 +102,10 @@ def update_propmt(update_chapter):
     Prompts user to update current chapter of a given entry as well as
     mark a given entry as finished
     """
-    chapter_string = 'Enter the number of the manga whos chapter you want to update'
+    chapter_string = 'Enter the number of the manga whos chapter you want to update\n'
     finish_string = 'Enter the number of the manga you want to mark as finished\n'
     m_list = read_data(False)
+
     for counter, value in enumerate(m_list):
         print(COLOR + '{0}: {1}'.format(counter, value))
     update_entry = int(input(COLOR + chapter_string if update_chapter else finish_string))
@@ -109,18 +116,24 @@ def update_propmt(update_chapter):
 
     # Gives the option to update either the name and/or the website it gets read from
     if update_chapter:
-        #chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
         new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
         print(m_list[update_entry].name, new_chapter)
-        #m_list[update_chapter_number].chapter = new_chapter
+        manga_data = {
+            'function': 'chapter',
+            'name': m_list[update_entry].name,
+            'new_chapter': new_chapter
+        }
+        req = requests.post('http://localhost:5000/manga/update', json=manga_data)
+        print(req.text)
+    # This is for the finish flag
     else:
-        # This is for the finish flag
         print(m_list[update_entry].name)
-        #req = requests.post()
-        #website_update_flag = input( # PEP8 on its bullshit
-        #    COLOR + 'Would you like to update the website associated with that entry? y/N?\n')
-        #if website_update_flag == 'Y' or website_update_flag == 'y':
-        #    new_site = input(COLOR + 'Please enter the new site: ')
+        manga_data = {
+            'function': 'finish',
+            'name': m_list[update_entry].name
+        }
+        req = requests.post('http://localhost:5000/manga/update', json=manga_data)
+        print(req.text)
 
 def main():
     """ Main Function

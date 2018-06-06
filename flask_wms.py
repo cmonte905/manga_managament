@@ -1,4 +1,3 @@
-from os import path
 from db import DB
 
 """
@@ -20,35 +19,30 @@ def write_new_data(name, chapter, site, finish):
 def read_data():
     """
     @TODO Read back data from sqlite, returns back a json object, or something parseable
-    Reads in data from the data.bin file, it will return back empty list if file is empty
     """
     mangos = database.read_data()
     return mangos
 
-
-def delete_entry():
+def delete_entry(manga_name):
     """
     Deletes an entry from a list, might make a finish flag to remember what it
     is that i have read
     """
-    m_list = read_data()
-    for counter, value in enumerate(m_list):
-        print('{0}: {1}'.format(counter, value))
-    delete_chapter_number = int(input(  # PEP8 bullshit
-        'Enter the number of the chapter you want to delete from the data\n'))
-    m_list.pop(delete_chapter_number)
-    write_data(m_list)
+    print('from flask wms: ', manga_name)
+    database.delete_entry(manga_name)
 
-def update_chapter_number(new_chapter):
-    pass
+def update_chapter_number(name, new_chapter):
+    """
+    Questioning if this is necessary, to have this helper function, though more
+    there could be some kind of validation done here before being sent off to
+    be recorded
+    """
+    database.update_chapter(name, new_chapter)
+    database.commit_db()
 
-def update_finish():
+def update_finish(name):
     """
     Given a list of manga, user chooses which one is now finished
     """
-    m_list = read_data(True)
-    if m_list:
-        update_chapter_number = int(input(
-            'Enter the number of the chapter you want to mark as finished\n'))
-    else:
-        print('There are no entries in the database empty')
+    database.update_finish(name)
+    database.commit_db()
