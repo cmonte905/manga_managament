@@ -91,48 +91,36 @@ def new_prompt():
     else:
         print(COLOR + 'That entry is already in the list, use update instead')
 
-def update_propmt():
+def update_propmt(update_chapter):
     """
-    Prompts user to update a manga given
+    Prompts user to update current chapter of a given entry as well as
+    mark a given entry as finished
     """
+    chapter_string = 'Enter the number of the manga whos chapter you want to update'
+    finish_string = 'Enter the number of the manga you want to mark as finished\n'
     m_list = read_data(False)
     for counter, value in enumerate(m_list):
         print(COLOR + '{0}: {1}'.format(counter, value))
-    update_chapter_number = int(input(COLOR + 'Enter the number of the chapter you want to update\n'))
-
-    if m_list[update_chapter_number]:
+    update_entry = int(input(COLOR + chapter_string if update_chapter else finish_string))
+    if m_list[update_entry]:
         print(COLOR + 'The index is correct')
     else:
         print(ERROR + 'The index is wrong')
 
     # Gives the option to update either the name and/or the website it gets read from
-    chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
-    if chapter_update_flag == 'y' or chapter_update_flag == 'Y':
+    if update_chapter:
+        #chapter_update_flag = input(COLOR + 'Would you like to update the current chapter? y/N?\n')
         new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
+        print(m_list[update_entry].name, new_chapter)
         #m_list[update_chapter_number].chapter = new_chapter
-
-    website_update_flag = input( # PEP8 on its bullshit
-        COLOR + 'Would you like to update the website associated with that entry? y/N?\n')
-    if website_update_flag == 'Y' or website_update_flag == 'y':
-        new_site = input(COLOR + 'Please enter the new site: ')
-        #m_list[update_chapter_number].website = new_site
-
-def update_finish():
-    """
-    #TODO Decide if this should stay or have it be in the prompt
-    Given a list of manga, user chooses which one is now finished
-    """
-    m_list = read_data(True)
-    for counter, value in enumerate(mangos):
-        print(COLOR + '{0}: {1} {2}'.format(counter, value, value.website))
-    if m_list:
-        update_chapter_number = int(input(
-            'Enter the number of the chapter you want to mark as finished\n'))
-        m_list[update_chapter_number].finished = True
-        write_data(m_list)
-
     else:
-        print('Data file is empty')
+        # This is for the finish flag
+        print(m_list[update_entry].name)
+        #req = requests.post()
+        #website_update_flag = input( # PEP8 on its bullshit
+        #    COLOR + 'Would you like to update the website associated with that entry? y/N?\n')
+        #if website_update_flag == 'Y' or website_update_flag == 'y':
+        #    new_site = input(COLOR + 'Please enter the new site: ')
 
 def main():
     """ Main Function
@@ -143,14 +131,14 @@ def main():
     if args.new:  # Prompts user to create new entry to store
         new_prompt()
     elif args.update:  # Prompts the user to update either the chapter number or finish flag
-        update_propmt()
+        update_propmt(True)
     elif args.list:  # Prints out data from database on the console
         read_data(True)
     elif args.delete:  # Prompts user to delete an entry from the database
         delete_entry()
     # Probably not going to use this, just have the one function do it instead
     elif args.finished:
-        update_finish()
+        update_propmt(False)
 
 if __name__ == '__main__':
     main()
