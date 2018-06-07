@@ -14,14 +14,16 @@ to a flask backend
 
 # Global variables for the colors to be displayed in the terminal because why not
 COLOR = Fore.YELLOW#+ Back.BLACK
-ERROR = Fore.RED + Back.BLACK
+ERROR = Fore.RED #+ Back.BLACK
+SERVER = 'http://localhost:5000/manga'
+# TODO Change the server when this gets deployed to a server
+
 
 def get_parser():
     """
     Returns parser
     """
-    parser = argparse.ArgumentParser(description='Help keep mangas order organized,' +
-                                     'some of these aruments might not be implemented')
+    parser = argparse.ArgumentParser(description='Help keep mangas order organized')
     parser.add_argument('-n', '--new',
                         help='Goes through a prompt for new entry', action='store_true')
     parser.add_argument('-u', '--update',
@@ -31,15 +33,14 @@ def get_parser():
     parser.add_argument('-d', '--delete',
                         help='Delete entries in using a prompt', action='store_true')
     parser.add_argument('-f', '--finished',
-                        help='Set a manga to finished', action='store_true')
+                        help='Set an entry to finished', action='store_true')
     return parser.parse_args()
 
 def read_data(print_flag):
     """
     Reads in data from the database at the server,
     """
-    # TODO Change the server when this gets deployed to a server
-    req = requests.get('http://localhost:5000/manga/read')
+    req = requests.get(SERVER + '/read')
     mangos = []
     for i in req.json():
         mangos.append(manga(i[0], i[1], i[2], i[3]))
@@ -49,27 +50,8 @@ def read_data(print_flag):
                 print(COLOR, i)
         return mangos
     else:
-        print('list is empty')
+        print(ERROR + 'There is no data in the database')
         return []
-
-def delete_entry():
-    """
-    #TODO Implement
-    Deletes an entry from a list, might make a finish flag to remember what it
-    is that i have read
-    """
-    m_list = read_data(False)
-    for counter, value in enumerate(m_list):
-        print(COLOR + '{0}: {1}'.format(counter, value))
-    delete_chapter_number = int(input(  # PEP8 bullshit
-        COLOR + 'Enter the number of the chapter you want to delete from the data\n'))
-    try:
-        print(m_list[delete_chapter_number])
-        data = {'name': m_list[delete_chapter_number].name}
-        req = requests.post('http://localhost:5000/manga/delete', json=data)
-        print(req.text)
-    except IndexError:
-        print('There is no entry for that number')
 
 def new_prompt():
     """
@@ -92,7 +74,7 @@ def new_prompt():
             'chapter': new_manga_chapter,
             'site': new_manga_site
         }
-        req = requests.post('http://localhost:5000/manga/create', json=manga_data)
+        req = requests.post(SERVER + '/create', json=manga_data)
         print(req.text)
     else:
         print(COLOR + 'That entry is already in the list, use update instead')
@@ -123,7 +105,7 @@ def update_propmt(update_chapter):
             'name': m_list[update_entry].name,
             'new_chapter': new_chapter
         }
-        req = requests.post('http://localhost:5000/manga/update', json=manga_data)
+        req = requests.post(SERVER + '/update', json=manga_data)
         print(req.text)
     # This is for the finish flag
     else:
@@ -132,8 +114,27 @@ def update_propmt(update_chapter):
             'function': 'finish',
             'name': m_list[update_entry].name
         }
-        req = requests.post('http://localhost:5000/manga/update', json=manga_data)
+        req = requests.post(SERVER + '/update', json=manga_data)
         print(req.text)
+
+def delete_entry():
+    """
+    Deletes an entry from a list, might make a finish flag to remember what it
+    is that i have read
+    """
+    m_list = read_data(False)
+    if m_list:
+        for counter, value in enumerate(m_list):
+            print(COLOR + '{0}: {1}'.format(counter, value))
+        delete_chapter_number = int(input(  # PEP8 bullshit
+            COLOR + 'Enter the number of the chapter you want to delete from the data\n'))
+        try:
+            print(m_list[delete_chapter_number])
+            data = {'name': m_list[delete_chapter_number].name}
+            req = requests.post(SERVER + '/delete', json=data)
+            print(req.text)
+        except IndexError:
+            print('There is no entry for that number')
 
 def main():
     """ Main Function
