@@ -136,11 +136,23 @@ def delete_entry():
         except IndexError:
             print('There is no entry for that number')
 
+def print_ascii():
+    """
+    Prints some nice art because why not
+    """
+    print(COLOR + '''
+      _      ____  _______
+     | | /| / /  |/  / __/
+     | |/ |/ / /|_/ /\ \\
+     |__/|__/_/  /_/___/
+    ''')
+
 def main():
     """ Main Function
     In the future, Put this on a databse, if local, then sqlite, otherwise, maybe some nosql thing
     Then on the web
     """
+    print_ascii()
     args = get_parser()
     if args.new:  # Prompts user to create new entry to store
         new_prompt()
