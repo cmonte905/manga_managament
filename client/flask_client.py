@@ -10,7 +10,7 @@ It uses command line arguments to get information that gets sent off to a flask 
 """
 
 # Global variables for the colors to be displayed in the terminal because why not
-COLOR = Fore.YELLOW#+ Back.BLACK
+COLOR = Fore.GREEN #+ Back.BLACK
 ERROR = Fore.RED #+ Back.BLACK
 SERVER = 'http://localhost:5000/manga'
 # TODO Change the server when this gets deployed to a server
@@ -47,6 +47,8 @@ def read_data(print_flag):
                 print(COLOR, i)
         return mangos
     else:
+        if print_flag:
+            print('There is no data in the database, to create entry, use -n flag')
         return []
 
 def new_prompt():
