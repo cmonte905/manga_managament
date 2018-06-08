@@ -6,8 +6,7 @@ from manga import manga
 """
 Weebo Management System(wms) Client
 Console based program designed to make managing manga a bit easier.
-It uses command line arguments to get information that gets sent off
-to a flask backend
+It uses command line arguments to get information that gets sent off to a flask backend
 """
 
 # Global variables for the colors to be displayed in the terminal because why not
@@ -16,12 +15,11 @@ ERROR = Fore.RED #+ Back.BLACK
 SERVER = 'http://localhost:5000/manga'
 # TODO Change the server when this gets deployed to a server
 
-
 def get_parser():
     """
     Returns parser
     """
-    parser = argparse.ArgumentParser(description='Help keep mangas order organized')
+    parser = argparse.ArgumentParser(description='Help keep mangas order organized, in the cloud')
     parser.add_argument('-n', '--new',
                         help='Goes through a prompt for new entry', action='store_true')
     parser.add_argument('-u', '--update',
@@ -32,7 +30,8 @@ def get_parser():
                         help='Delete entries in using a prompt', action='store_true')
     parser.add_argument('-f', '--finished',
                         help='Set an entry to finished', action='store_true')
-    return parser.parse_args()
+    #return parser.parse_args()
+    return parser
 
 def read_data(print_flag):
     """
@@ -48,7 +47,6 @@ def read_data(print_flag):
                 print(COLOR, i)
         return mangos
     else:
-        print(ERROR + 'There is no data in the database')
         return []
 
 def new_prompt():
@@ -86,34 +84,38 @@ def update_propmt(update_chapter):
     finish_string = 'Enter the number of the manga you want to mark as finished\n'
     m_list = read_data(False)
 
-    for counter, value in enumerate(m_list):
-        print(COLOR + '{0}: {1}'.format(counter, value))
-    update_entry = int(input(COLOR + chapter_string if update_chapter else finish_string))
-    if m_list[update_entry]:
-        print(COLOR + 'The index is correct')
-    else:
-        print(ERROR + 'The index is wrong')
-
     # Gives the option to update either the name and/or the website it gets read from
-    if update_chapter:
-        new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
-        print(m_list[update_entry].name, new_chapter)
-        manga_data = {
-            'function': 'chapter',
-            'name': m_list[update_entry].name,
-            'new_chapter': new_chapter
-        }
-        req = requests.post(SERVER + '/update', json=manga_data)
-        print(req.text)
-    # This is for the finish flag
+    if  m_list:
+        for counter, value in enumerate(m_list):
+            print(COLOR + '{0}: {1}'.format(counter, value))
+        update_entry = int(input(COLOR + chapter_string if update_chapter else finish_string))
+        if m_list[update_entry]:
+            print(COLOR + 'The index is correct')
+        else:
+            print(ERROR + 'The index is wrong')
+        if update_chapter:
+            new_chapter = int(input(COLOR + 'Enter the new current chapter: '))
+            print(m_list[update_entry].name, new_chapter)
+            manga_data = {
+                'function': 'chapter',
+                'name': m_list[update_entry].name,
+                'new_chapter': new_chapter
+            }
+            req = requests.post(SERVER + '/update', json=manga_data)
+            print(req.text)
+        # This is for the finish flag
+        else:
+            print(m_list[update_entry].name)
+            manga_data = {
+                'function': 'finish',
+                'name': m_list[update_entry].name
+            }
+            req = requests.post(SERVER + '/update', json=manga_data)
+            print(req.text)
     else:
-        print(m_list[update_entry].name)
-        manga_data = {
-            'function': 'finish',
-            'name': m_list[update_entry].name
-        }
-        req = requests.post(SERVER + '/update', json=manga_data)
-        print(req.text)
+        print(ERROR + "There is no data in the database")
+
+
 
 def delete_entry():
     """
@@ -150,7 +152,9 @@ def main():
     In the future, Put this on a databse, if local, then sqlite, otherwise, maybe some nosql thing
     Then on the web
     """
-    args = get_parser()
+    arg = get_parser()
+    args = arg.parse_args()
+    print_ascii()
     if args.new:  # Prompts user to create new entry to store
         new_prompt()
     elif args.update:  # Prompts the user to update either the chapter number or finish flag
@@ -162,7 +166,8 @@ def main():
     # Probably not going to use this, just have the one function do it instead
     elif args.finished:
         update_propmt(False)
+    else:
+        arg.print_help()
 
 if __name__ == '__main__':
-    print_ascii()
     main()
