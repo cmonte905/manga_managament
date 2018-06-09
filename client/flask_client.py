@@ -117,8 +117,6 @@ def update_propmt(update_chapter):
     else:
         print(ERROR + "There is no data in the database")
 
-
-
 def delete_entry():
     """
     Deletes an entry from a list, might make a finish flag to remember what it
@@ -137,6 +135,8 @@ def delete_entry():
             print(req.text)
         except IndexError:
             print('There is no entry for that number')
+    else:
+        print(ERROR + 'There are no entries to delete in the database, to create new entries use -n flag')
 
 def print_ascii():
     """
@@ -146,8 +146,7 @@ def print_ascii():
       _      ____  _______
      | | /| / /  |/  / __/
      | |/ |/ / /|_/ /\ \\
-     |__/|__/_/  /_/___/
-    ''')
+     |__/|__/_/  /_/___/''')
 
 def main():
     """ Main Function
