@@ -2,13 +2,6 @@ import flask_wms
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    """
-    #TODO: Get rid of this endpoint soon, it is just a sanity check
-    """
-    return 'Hello world, this should not be open to the internet'
-
 @app.route('/manga/create', methods=['POST'])
 def post_create():
     """

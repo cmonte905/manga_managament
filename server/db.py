@@ -13,7 +13,7 @@ class DB:
         Connects to the manga database
         :param db: Database to connect too
         """
-        self.m_db_connection = sqlite3.connect(db)
+        self.m_db_connection = sqlite3.connect(db, check_same_thread=False)
         self.m_db_cursor = self.m_db_connection.cursor()
 
     def create_manga_table(self):
