@@ -2,6 +2,22 @@ import flask_wms
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    """
+    Create index for site
+    """
+    print('This is the root')
+    return 'Root, this is where some front end would go on a server'
+
+@app.route('/manga')
+def home():
+    """
+    Create endpoint, writes to the database user's new entry
+    """
+    print('This is the root')
+    return 'Root, this is where some front end would go on a server'
+
 @app.route('/manga/create', methods=['POST'])
 def post_create():
     """

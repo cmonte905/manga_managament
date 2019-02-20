@@ -15,13 +15,13 @@ class DB:
         """
         self.m_db_connection = sqlite3.connect(db, check_same_thread=False)
         self.m_db_cursor = self.m_db_connection.cursor()
+        self.create_manga_table()
 
     def create_manga_table(self):
         """
         Creates table if there is none already created
         """
-        self.m_db_cursor.execute('''CREATE TABLE IF NOT EXISTS mangas (
-        name TEXT UNIQUE, chapter TEXT, site TEXT, finished TEXT)''')
+        self.m_db_cursor.execute('''CREATE TABLE IF NOT EXISTS mangas (name TEXT UNIQUE, chapter TEXT, site TEXT, finished TEXT)''')
 
     def add_new_entry(self, name, chapter, site, finish):
         """
@@ -32,8 +32,7 @@ class DB:
         :param finish -> finish flag
         """
         print('From API', name, chapter, site, finish)
-        self.m_db_cursor.execute('INSERT or IGNORE INTO mangas VALUES (?, ?, ?, ?)',
-                                 (name, chapter, site, finish))
+        self.m_db_cursor.execute('INSERT or IGNORE INTO mangas VALUES (?, ?, ?, ?)', (name, chapter, site, finish))
 
     def update_chapter(self, name, new_chapter):
         """
