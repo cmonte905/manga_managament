@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 @app.route('/')
-def home():
+def index():
     """
     Create index for site
     """
@@ -68,4 +68,4 @@ def post_read():
     return jsonify(mangos)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
