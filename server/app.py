@@ -7,7 +7,7 @@ def index():
     """
     Create index for site
     """
-    print('This is the root')
+    print('This is the root of the app, should have something better')
     return 'Root, this is where some front end would go on a server'
 
 @app.route('/manga')
@@ -16,7 +16,7 @@ def home():
     Create endpoint, writes to the database user's new entry
     """
     print('This is the root')
-    return 'Root, this is where some front end would go on a server'
+    return 'Manga root, this is where some front end would go on a server'
 
 @app.route('/manga/create', methods=['POST'])
 def post_create():
